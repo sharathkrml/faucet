@@ -30,7 +30,7 @@ export function Faucet() {
         const response = await fetch(`${SERVER_URL}/balance`)
         const data = await response.json()
         // convert data.balance to ether
-        let balance = data.balance / 10 ** 18
+        const balance = data.balance / 10 ** 18
         setBalance(balance)
       } catch (error) {
         console.error("Failed to fetch balance:", error)
@@ -65,7 +65,7 @@ export function Faucet() {
       const data = await response.json()
       console.log(data)
       setTxHash(data.tx)
-    } catch (error) {
+    } catch {
       setError("Failed to submit claim. Please try again.")
     } finally {
       setIsSubmitting(false)
