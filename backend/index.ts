@@ -1,19 +1,26 @@
 // create an express server with /health, /balance get endpoints, and /claim post endpoints
 import express from "express"
 import * as dotenv from "dotenv"
+import cors from "cors"
 import { getAccount, publicClient, walletClient } from "./utils"
 import { Address, isAddress } from "viem"
 dotenv.config()
 
 const account = getAccount()
-const amount = BigInt(1 * 10 ** 15)
+// 0.001 ETH
+const amount = BigInt(1e15)
 const app = express()
 const port = 8000
 
+app.use(cors()) // Enable CORS
 app.use(express.json())
 
 app.get("/health", (req: express.Request, res: express.Response) => {
   res.status(200).send("Server is healthy")
+})
+
+app.get("/account", (req: express.Request, res: express.Response) => {
+  res.status(200).json({ account: account.address })
 })
 
 app.get("/balance", async (req: express.Request, res: express.Response) => {
@@ -35,10 +42,11 @@ app.post("/claim", async (req: express.Request, res: express.Response) => {
   if (isAddress(externalAddress)) {
     // validate eth address
     // send amount to the account
+    console.log(`sending ${amount} to ${externalAddress}`)
     let tx = await walletClient.sendTransaction({
       account,
       to: externalAddress as Address,
-      amount,
+      value: amount,
     })
     res.status(200).json({ tx })
   } else {
