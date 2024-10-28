@@ -7,7 +7,6 @@ dotenv.config();
 export const getAccount = (): PrivateKeyAccount => {
  // read PRIVATE_KEY from .env
  const privateKey = process.env.PRIVATE_KEY;
- console.log('privateKey:', privateKey);
  return privateKeyToAccount(`0x${privateKey}`);
 }
 
